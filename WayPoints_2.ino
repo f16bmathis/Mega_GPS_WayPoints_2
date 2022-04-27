@@ -1,5 +1,6 @@
 /* Touch works, just with orientation "touch" is above the "ON" button
- * All but HOLY HILL works, gets stuck there
+ * All wayPoints work
+ * Compass removed just commented out
  * Works on blue and red TFT display
  * Added curentWaypoint for function with GPS waypoints
  * Added if ((gps.location.isValid()) && (currentWaypoint == '1'))
