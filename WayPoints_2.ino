@@ -1,28 +1,24 @@
-/* Touch works, just with orientation "touch" is above the "ON" button
+ /*  Touch works, just with orientation "touch" is top half of screen
  * All wayPoints work
- * Compass removed just commented out
  * Works on blue and red TFT display
  * Added curentWaypoint for function with GPS waypoints
- * Added if ((gps.location.isValid()) && (currentWaypoint == '1'))
- * Added CAPITOL< HOME< CARL & HOLY HILL
+ * Added if ((gps.location.isValid()) && (currentWaypoint == '1')) also 2,3,4
+ * Added CAPITOL< HOME 2< CARL 4 & HOLY HILL 3
  * MEGA must be connected or you will get "Serial1 was not declared in this scope" error
- * MEGA  ***This is the one for Capitol Airport ***
  * Removed Date and Time
  * RED TFT (ILI9341)
  * Pin19  to 4th pin on sensor
  * GPS Sensor GT-U7
- * Displays Compass and GPS headers, SEEMS TO WORK!
+ * Displays Compass and GPS headers
  * Changed KPH to MPH
  * Changed Altitude Meters to Feet
  * Added GPS Valid Gren/Red box ***ONLY valid if 
- * GPS SAT signal is lost, not if wire #19 is 
- * pulled out and Arduino is not receiving signals.***
+ *    GPS SAT signal is lost, not if wire #19 is 
+ *    pulled out and Arduino is not receiving signals.***
  * Added Dist and Heading to Capitol Airport Waukesha WI (can be changed)
  * Changed SPEED to not show anything behind the decimal point.
  * Deleted GPS TIME It was off by hours and who needs it?
- * Added touch buttons but they arent working, goes with orange block
- * Blocked compass, touch ON or OFF is above the "ON" button
-*/
+ */
 
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
@@ -129,10 +125,10 @@ Serial.begin(115200);
     tft.setRotation(1);            //Landscape
     tft.fillScreen(BLACK);
 
-    on_btn.initButton(&tft,  180, 150, 80, 100, WHITE, CYAN, BLACK, "ON", 2);   // Moves, draws BUTTON, & touch point, should be portrait for proper operation
-    off_btn.initButton(&tft, 260, 150, 80, 100, WHITE, CYAN, BLACK, "OFF", 2);  // And touch position (&tft)
-    on_btn.drawButton(false);   // Button will draw if pressed and this is disabled
-    off_btn.drawButton(false);
+    //on_btn.initButton(&tft,  180, 150, 80, 100, WHITE, CYAN, BLACK, "ON", 2);   // Moves, draws BUTTON, & touch point, should be portrait for proper operation
+    off_btn.initButton(&tft, 260, 150, 300, 300, BLACK, BLACK, BLACK, "OFF", 2);  // And touch position (&tft) These #'s make upper half of screen
+    //on_btn.drawButton(false);   // Button will draw if pressed and this is disabled
+    //off_btn.drawButton(false);
   } 
 //*** END TOUCH SETUP  ***********************************************************************************
 
@@ -149,7 +145,6 @@ void loop() {
   AltitudeMETRES = gps.altitude.meters();     // KEEP THIS! No Altitude!
   AltitudeFEET   = gps.altitude.feet();
 
-  
 
                       // ********* GPS GOOD? This works ONLY if SAT signal is lost NOT if Pin19 is pulled out *******
 if (gps.satellites.value ()> 3 )
@@ -168,7 +163,7 @@ if ((gps.location.isValid()) && (currentWaypoint == 1))
   //PrintText(40, 0, "distanceToWAYPOINT:" + String(),2, 2);        //////////////
   //tft.fillRect(45, 40, 90, 19 * 4, BLACK); //LAT, LONG, ALT, SAT area
   
-  static const double WAYPOINT_LAT = 43.089619, WAYPOINT_LON = -88.179440;
+  static const double WAYPOINT_LAT = 43.090410, WAYPOINT_LON = -88.178650;
       double distanceToWAYPOINT =
       TinyGPSPlus::distanceBetween(gps.location.lat(), gps.location.lng(), WAYPOINT_LAT, WAYPOINT_LON);
       double courseToWAYPOINT = TinyGPSPlus::courseTo(gps.location.lat(), gps.location.lng(), WAYPOINT_LAT, WAYPOINT_LON);
@@ -180,7 +175,7 @@ if ((gps.location.isValid()) && (currentWaypoint == 1))
       tft.println(distanceToWAYPOINT/1000*.6213712, 1);       // Prints Distance to WAYPOINT calculated for miles
       tft.setCursor(250, 0);
       tft.print("Miles");
-    Serial.println("sdjhbdjkfhvb");
+    Serial.println("IN VOID LOOP");
   }
  
 
@@ -195,7 +190,7 @@ PrintText(20, 0, "  HOME", WHITE, 2);
   
   //tft.fillRect(45, 40, 90, 19 * 4, BLACK);   //LAT, LONG, ALT, SAT area
     
-  static const double WAYPOINT_LAT = 43.200000, WAYPOINT_LON = -88.300000;
+  static const double WAYPOINT_LAT = 43.196470, WAYPOINT_LON = -88.296550;
       double distanceToWAYPOINT =
         TinyGPSPlus::distanceBetween(gps.location.lat(), gps.location.lng(), WAYPOINT_LAT, WAYPOINT_LON);
       double courseToWAYPOINT =
@@ -207,22 +202,22 @@ PrintText(20, 0, "  HOME", WHITE, 2);
       tft.println(TinyGPSPlus::cardinal(courseToWAYPOINT));   // Prints "cardinal heading (SE) to gps location" on TFT
       tft.setCursor(190, 0);
       tft.println(distanceToWAYPOINT/1000*.6213712, 1);       // Prints Distance to WAYPOINT calculated for miles
-      //tft.setCursor(250, 0);
-      //tft.print("Miles");
+      tft.setCursor(250, 0);
+      tft.print("Miles");
   }
  
 
 // end Addding Distance & Heading to HOME
 
 // *** Adding Dist & Course to CARL *******************************************
-if ((gps.location.isValid()) && (currentWaypoint == 3))
+if ((gps.location.isValid()) && (currentWaypoint == 4))
   {
 tft.fillRect(32, 0, 202, 5 * 4, BLACK);   // Distance Left, Distance down, Distance right, Distance Down, * ????? See above tft.fillrect
 PrintText(20, 0, "  CARL", WHITE, 2);
   //PrintText(40, 0, "distanceToWAYPOINT:" + String(),2, 2);        //////////////
   //tft.fillRect(45, 40, 90, 19 * 4, BLACK);   //LAT, LONG, ALT, SAT area
     
-  static const double WAYPOINT_LAT = 43.369462, WAYPOINT_LON = -88.592716;
+  static const double WAYPOINT_LAT = 43.369512, WAYPOINT_LON = -88.592820;
       double distanceToWAYPOINT =
         TinyGPSPlus::distanceBetween(gps.location.lat(), gps.location.lng(), WAYPOINT_LAT, WAYPOINT_LON);
       double courseToWAYPOINT =
@@ -234,21 +229,21 @@ PrintText(20, 0, "  CARL", WHITE, 2);
       tft.println(TinyGPSPlus::cardinal(courseToWAYPOINT));   // Prints "cardinal heading (SE) to gps location" on TFT
       tft.setCursor(190, 0);
       tft.println(distanceToWAYPOINT/1000*.6213712, 1);       // Prints Distance to WAYPOINT calculated for miles
-      //tft.setCursor(250, 0);
-      //tft.print("Miles");
+      tft.setCursor(250, 0);
+      tft.print("Miles");
   }
   
 // end Addding Distance & Heading to CARL
 
 // *** Adding Dist & Course to HOLY HILL *******************************************
-if ((gps.location.isValid()) && (currentWaypoint == 4))
+if ((gps.location.isValid()) && (currentWaypoint == 3))
   {
 tft.fillRect(32, 0, 202, 5 * 4, BLACK);   // Distance Left, Distance down, Distance right, Distance Down, * ????? See above tft.fillrect
-PrintText(20, 0, " HOLY HILL", CYAN, 2);
+PrintText(20, 0, " HOLY HILL", WHITE, 2);
   //PrintText(40, 0, "distanceToWAYPOINT:" + String(),2, 2);        //////////////
     //tft.fillRect(45, 40, 90, 19 * 4, BLACK);   //LAT, LONG, ALT, SAT area
     
-  static const double WAYPOINT_LAT = 43.244222, WAYPOINT_LON = -88.327722;  // Not HOLY HILL, ulast 6 digits of both used for troubleshooting
+  static const double WAYPOINT_LAT = 43.244260, WAYPOINT_LON = -88.327680;  // Not HOLY HILL, ulast 6 digits of both used for troubleshooting
       double distanceToWAYPOINT =
       TinyGPSPlus::distanceBetween(gps.location.lat(), gps.location.lng(), WAYPOINT_LAT, WAYPOINT_LON);
       double courseToWAYPOINT =
@@ -259,8 +254,8 @@ PrintText(20, 0, " HOLY HILL", CYAN, 2);
       tft.println(TinyGPSPlus::cardinal(courseToWAYPOINT));   // Prints "cardinal heading (SE) to gps location" on TFT
       tft.setCursor(190, 0);
       tft.println(distanceToWAYPOINT/1000*.6213712, 1);       // Prints Distance to WAYPOINT calculated for miles
-      //tft.setCursor(235, 0);
-      //tft.print("Miles");
+      tft.setCursor(235, 0);
+      tft.print("Miles");
   }
  
 
@@ -268,7 +263,7 @@ PrintText(20, 0, " HOLY HILL", CYAN, 2);
 
 
   DisplayGPSdata(NumberSats, Latitude, Longitude, AltitudeMETRES, SpeedKPH, Bearing); // Select units as required
-  smartDelay(1000);
+  smartDelay(250);   // Was 1000, faster update of waypoint
   if (millis() > 5000 && gps.charsProcessed() < 10)  Serial.println(F("No GPS data received: check wiring"));
 
 //****** BEGIN TOUCH LOOP *******************************************************************************************
@@ -326,13 +321,12 @@ if(currentWaypoint >= 5)
   PrintText(35, 210, "" + String(dSpeed  / 1.609, 0) + "  ", WHITE, 3);  //SPEED
 
   tft.setCursor(200, 220);
-//  Display_Compass(dBearing);
+  Display_Compass(dBearing);
 }
 //#####################################################################
 
 
-/* // TEMPORARY ATTEMPT WITH NO COMPASS  **(ALSO UN BLOCK dISPLAY COMPASS ABOVE)***********************************
-
+ // TEMPORARY ATTEMPT WITH NO COMPASS  **(ALSO UN BLOCK dISPLAY COMPASS ABOVE)***********************************
 void Display_Compass(float dBearing) {
   int dxo, dyo, dxi, dyi;
   tft.setCursor(0, 0);
@@ -376,7 +370,6 @@ void draw_arrow(int x2, int y2, int x1, int y1, int alength, int awidth, int col
   tft.drawLine(x2, y2, x4, y4, colour);
 }
 
-*/
 
 //#####################################################################
 void PrintText(int x, int y, String text, int colour, byte text_size) {
